@@ -9,8 +9,8 @@ namespace Unicorn.Logging;
 
 public static class LoggingExtensions
 {
-    private const string ConsoleOutputTemplate = "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";
-    private const string FileOutputTemplate = "{Message:lj}{NewLine}{Exception}";
+    private const string ConsoleTemplate = "[{Timestamp:HH:mm:ss.fff} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";
+    private const string FileTemplate = "{Message:lj}{NewLine}{Exception}";
 
     public static IHostBuilder ConfigureLogging(this IHostBuilder builder, bool writeToFile = true)
     {
@@ -33,11 +33,11 @@ public static class LoggingExtensions
             .MinimumLevel.Override("System", LogEventLevel.Error)
             .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
             .Enrich.FromLogContext()
-            .WriteTo.Console(outputTemplate: ConsoleOutputTemplate);
+            .WriteTo.Console(outputTemplate: ConsoleTemplate);
 
         if (writeToFile)
         {
-            var formatter = new MessageTemplateTextFormatter(FileOutputTemplate, CultureInfo.InvariantCulture);
+            var formatter = new MessageTemplateTextFormatter(FileTemplate, CultureInfo.InvariantCulture);
             loggerConfiguration.WriteFilteredToRollingFile(formatter, "logs", LogEventLevel.Information);
         }
     }

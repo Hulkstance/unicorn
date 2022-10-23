@@ -14,7 +14,6 @@ public sealed class RabbitSubscriber
     private readonly IConnection _connection;
     private readonly IModel _channel;
     private readonly Queue _queue;
-
     private readonly SemaphoreSlim _semaphore = new(1, 1);
 
     public RabbitSubscriber(
@@ -55,7 +54,9 @@ public sealed class RabbitSubscriber
     public void Subscribe(Func<QueueExchanges, string, string, Task<bool>> queueFunc)
     {
         var consumer = new EventingBasicConsumer(_channel);
+
         consumer.Received += OnReceivedAsync;
+
         _channel.BasicConsume(_queue.NameString, !_queue.WithConfirm, consumer);
 
         async void OnReceivedAsync(object? _, BasicDeliverEventArgs ea)

@@ -17,21 +17,13 @@ public static class Euclidean
 
     public static int GreatestCommonDenominator(this IEnumerable<int> source)
     {
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source), "source is null");
-        }
-
+        ArgumentNullException.ThrowIfNull(source);
         return source.Aggregate(GreatestCommonDenominator);
     }
 
     public static int GreatestCommonDenominator(params int[] source)
     {
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source), "source is null");
-        }
-
+        ArgumentNullException.ThrowIfNull(source);
         return source.Aggregate(GreatestCommonDenominator);
     }
 
@@ -42,21 +34,13 @@ public static class Euclidean
 
     public static long GreatestCommonDenominator(this IEnumerable<long> source)
     {
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source), "source is null");
-        }
-
+        ArgumentNullException.ThrowIfNull(source);
         return source.Aggregate(GreatestCommonDenominator);
     }
 
     public static long GreatestCommonDenominator(params long[] source)
     {
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source), "source is null");
-        }
-
+        ArgumentNullException.ThrowIfNull(source);
         return source.Aggregate(GreatestCommonDenominator);
     }
 
@@ -67,21 +51,13 @@ public static class Euclidean
 
     public static int LeastCommonMultiple(this IEnumerable<int> source)
     {
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source), "source is null");
-        }
-
+        ArgumentNullException.ThrowIfNull(source);
         return source.Aggregate(LeastCommonMultiple);
     }
 
     public static int LeastCommonMultiple(params int[] source)
     {
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source), "source is null");
-        }
-
+        ArgumentNullException.ThrowIfNull(source);
         return source.Aggregate(LeastCommonMultiple);
     }
 
@@ -92,21 +68,13 @@ public static class Euclidean
 
     public static long LeastCommonMultiple(this IEnumerable<long> source)
     {
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source), "source is null");
-        }
-
+        ArgumentNullException.ThrowIfNull(source);
         return source.Aggregate(LeastCommonMultiple);
     }
 
     public static long LeastCommonMultiple(params long[] source)
     {
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source), "source is null");
-        }
-
+        ArgumentNullException.ThrowIfNull(source);
         return source.Aggregate(LeastCommonMultiple);
     }
 

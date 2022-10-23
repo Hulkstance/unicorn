@@ -74,7 +74,8 @@ public sealed class RabbitPublisher : IDisposable
             Encoding.UTF8.GetBytes(json));
     }
 
-    public void Publish<T>(QueueNames queue, QueueEntities entity, QueueActions action, T data) where T : class
+    public void Publish<T>(QueueNames queue, QueueEntities entity, QueueActions action, T data)
+        where T : class
     {
         var json = JsonHelper.Serialize(data);
 
