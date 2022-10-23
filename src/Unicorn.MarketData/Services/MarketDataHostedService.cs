@@ -1,4 +1,5 @@
 ﻿using Binance.Net.Interfaces.Clients;
+using Binance.Net.Objects.Models.Spot.Socket;
 using CryptoExchange.Net.Sockets;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -42,32 +43,9 @@ internal sealed class MarketDataHostedService : BackgroundService
 
         var subResult = await _socketClient.SpotStreams.SubscribeToTradeUpdatesAsync(symbols, data =>
         {
-            _logger.LogInformation("{Timestamp:HH:mm:ss.fff}, {Symbol}, {Price}, {Volume}",
-                data.Timestamp, data.Data.Symbol, data.Data.Price, data.Data.Quantity);
-
             var symbol = data.Data.Symbol;
-
-            if (_symbols.TryGetValue(symbol, out var volumeSpike))
-            {
-                var trade = new Trade(
-                    data.Timestamp,
-                    data.Data.Symbol,
-                    data.Data.Price,
-                    data.Data.Quantity);
-
-                var isVolumeSpikeTriggered = volumeSpike.ComputeNextValue(trade.Quantity);
-
-                if (isVolumeSpikeTriggered.HasValue && isVolumeSpikeTriggered.Value)
-                {
-                    Console.WriteLine($"{symbol} | Volume Spike triggered");
-
-                    _publisher.Publish(
-                        QueueNames.Signals,
-                        QueueEntities.Trade,
-                        QueueActions.Persist,
-                        trade with { IsVolumeSpikeTriggered = isVolumeSpikeTriggered });
-                }
-            }
+            Print(data);
+            VolumeSpikeProcessor(symbol, data);
         }, stoppingToken);
 
         if (!subResult)
@@ -84,6 +62,41 @@ internal sealed class MarketDataHostedService : BackgroundService
         }
 
         _updateSubscription = subResult.Data;
+
+        void Print(DataEvent<BinanceStreamTrade> data)
+        {
+            _logger.LogInformation("{Timestamp:HH:mm:ss.fff}, {Symbol}, {Price}, {Volume}",
+                data.Timestamp, data.Data.Symbol, data.Data.Price, data.Data.Quantity);
+        }
+
+        void VolumeSpikeProcessor(string symbol, DataEvent<BinanceStreamTrade> data)
+        {
+            if (!_symbols.TryGetValue(symbol, out var volumeSpike))
+            {
+                return;
+            }
+
+            var trade = new Trade(
+                data.Timestamp,
+                data.Data.Symbol,
+                data.Data.Price,
+                data.Data.Quantity);
+
+            var isVolumeSpikeTriggered = volumeSpike.ComputeNextValue(trade.Quantity);
+
+            if (!isVolumeSpikeTriggered.HasValue || !isVolumeSpikeTriggered.Value)
+            {
+                return;
+            }
+
+            Console.WriteLine($"{symbol} | Volume Spike triggered");
+
+            _publisher.Publish(
+                QueueNames.Signals,
+                QueueEntities.Trade,
+                QueueActions.Persist,
+                trade with { IsVolumeSpikeTriggered = isVolumeSpikeTriggered });
+        }
     }
 
     public override async Task StopAsync(CancellationToken cancellationToken)
