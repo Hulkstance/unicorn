@@ -44,8 +44,8 @@ internal sealed class MarketDataHostedService : BackgroundService
         var subResult = await _socketClient.SpotStreams.SubscribeToTradeUpdatesAsync(symbols, data =>
         {
             var symbol = data.Data.Symbol;
-            Print(data);
-            VolumeSpikeProcessor(symbol, data);
+            PrintToTheConsole(data);
+            DetectVolumeSpikes(symbol, data);
         }, stoppingToken);
 
         if (!subResult)
@@ -63,13 +63,13 @@ internal sealed class MarketDataHostedService : BackgroundService
 
         _updateSubscription = subResult.Data;
 
-        void Print(DataEvent<BinanceStreamTrade> data)
+        void PrintToTheConsole(DataEvent<BinanceStreamTrade> data)
         {
             _logger.LogInformation("{Timestamp:HH:mm:ss.fff}, {Symbol}, {Price}, {Volume}",
                 data.Timestamp, data.Data.Symbol, data.Data.Price, data.Data.Quantity);
         }
 
-        void VolumeSpikeProcessor(string symbol, DataEvent<BinanceStreamTrade> data)
+        void DetectVolumeSpikes(string symbol, DataEvent<BinanceStreamTrade> data)
         {
             if (!_symbols.TryGetValue(symbol, out var volumeSpike))
             {
