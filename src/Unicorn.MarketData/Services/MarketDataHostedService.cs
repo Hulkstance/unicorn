@@ -2,9 +2,11 @@
 using CryptoExchange.Net.Sockets;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Unicorn.Algo.Indicators;
 using Unicorn.Contracts;
 using Unicorn.Integration.RabbitMQ;
 using Unicorn.Integration.RabbitMQ.Enums;
+using Unicorn.Integration.RabbitMQ.Interfaces;
 
 namespace Unicorn.MarketData.Services;
 
@@ -12,7 +14,8 @@ internal sealed class MarketDataHostedService : BackgroundService
 {
     private readonly ILogger<MarketDataHostedService> _logger;
     private readonly IBinanceSocketClient _socketClient;
-    private readonly IRabbitConnectionFactory _connectionFactory;
+    private readonly RabbitPublisher _publisher;
+    private readonly Dictionary<string, VolumeSpike> _symbols = new();
 
     private UpdateSubscription? _updateSubscription;
 
@@ -23,26 +26,53 @@ internal sealed class MarketDataHostedService : BackgroundService
     {
         _logger = logger;
         _socketClient = socketClient;
-        _connectionFactory = connectionFactory;
+        _publisher = new RabbitPublisher(connectionFactory, QueueExchanges.NewsDirect);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var publisher = new RabbitPublisher(_connectionFactory, QueueExchanges.NewsDirect);
         var symbols = new[] { "BNBUSDT", "ADAUSDT" };
 
-        var subResult = await _socketClient.SpotStreams.SubscribeToTickerUpdatesAsync(symbols, data =>
+        foreach (var symbol in symbols)
         {
-            _logger.LogInformation("{Timestamp:HH:mm:ss.fff}, {Symbol}, {Price}, {Volume}",
-                data.Timestamp, data.Data.Symbol, data.Data.LastPrice, data.Data.Volume);
+            const int period = 20;
+            const int multiplier = 2;
+            _symbols[symbol] = new VolumeSpike(period, multiplier);
+        }
 
-            var ticker = new Ticker(data.Timestamp, data.Data.Symbol, data.Data.LastPrice, data.Data.Volume);
-            publisher.Publish(QueueNames.Signals, QueueEntities.Ticker, QueueActions.Compute, ticker);
+        var subResult = await _socketClient.SpotStreams.SubscribeToTradeUpdatesAsync(symbols, data =>
+        {
+            var symbol = data.Data.Symbol;
+
+            _logger.LogInformation("{Timestamp:HH:mm:ss.fff}, {Symbol}, {Price}, {Volume}",
+                data.Timestamp, data.Data.Symbol, data.Data.Price, data.Data.Quantity);
+
+            var trade = new Trade(
+                data.Timestamp,
+                data.Data.Symbol,
+                data.Data.Price,
+                data.Data.Quantity);
+
+            if (_symbols.TryGetValue(symbol, out var volumeSpike))
+            {
+                var signal = volumeSpike.ComputeNextValue(trade.Volume);
+
+                if (signal.HasValue)
+                {
+                    Console.WriteLine($"{symbol} | Volume Spike = {signal}");
+                }
+            }
+
+            _publisher.Publish(
+                QueueNames.Signals,
+                QueueEntities.Trade,
+                QueueActions.Persist,
+                trade);
         }, stoppingToken);
 
         if (!subResult)
         {
-            _logger.LogError("Error while subscribing to the ticker endpoint. {Error}", subResult.Error);
+            _logger.LogError("Error while subscribing to the trade endpoint. {Error}", subResult.Error);
             return;
         }
 

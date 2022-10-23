@@ -22,8 +22,12 @@ public sealed class RabbitNewsDirect : IRabbitAction
 
         return entity switch
         {
-            QueueEntities.Ticker => serviceProvider.GetRequiredService<TickerProcessor>().ProcessAsync(action, JsonHelper.Deserialize<Ticker>(data)),
-            QueueEntities.Tickers => serviceProvider.GetRequiredService<TickerProcessor>().ProcessRangeAsync(action, JsonHelper.Deserialize<IEnumerable<Ticker>>(data)),
+            QueueEntities.Trade => serviceProvider
+                .GetRequiredService<TradeProcessor>()
+                .ProcessAsync(action, JsonHelper.Deserialize<Trade>(data)),
+            QueueEntities.Trades => serviceProvider
+                .GetRequiredService<TradeProcessor>()
+                .ProcessRangeAsync(action, JsonHelper.Deserialize<IEnumerable<Trade>>(data)),
             _ => Task.CompletedTask
         };
     }

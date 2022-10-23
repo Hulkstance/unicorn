@@ -9,9 +9,9 @@ var factory = new ConnectionFactory
 };
 var publisher = new RabbitPublisher(new RabbitConnectionFactory(factory), QueueExchanges.NewsDirect);
 
-var tickers = new List<Ticker>
+var trades = new List<Trade>
 {
     new(DateTimeOffset.Now, "BTCUSDT",530, 53456),
     new(DateTimeOffset.Now, "BTCUSDT",213, 111156),
 };
-publisher.Publish(QueueNames.Signals, QueueEntities.Tickers, QueueActions.Compute, tickers);
+publisher.Publish(QueueNames.Signals, QueueEntities.Trades, QueueActions.Persist, trades);

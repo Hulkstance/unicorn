@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using RabbitMQ.Client;
 using Unicorn.Integration.RabbitMQ.Enums;
+using Unicorn.Integration.RabbitMQ.Interfaces;
 using Unicorn.Integration.RabbitMQ.Models;
 
 namespace Unicorn.Integration.RabbitMQ;

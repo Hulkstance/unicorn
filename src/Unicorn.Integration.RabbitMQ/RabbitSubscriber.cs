@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Unicorn.Integration.RabbitMQ.Enums;
+using Unicorn.Integration.RabbitMQ.Interfaces;
 using Unicorn.Integration.RabbitMQ.Models;
 
 namespace Unicorn.Integration.RabbitMQ;

@@ -15,22 +15,22 @@ public static class QueueConfiguration
                 {
                     Entities = new[]
                     {
-                        new QueueEntity(QueueEntities.Ticker)
+                        new QueueEntity(QueueEntities.Trade)
                         {
                             Actions = new[]
                             {
                                 QueueActions.Get,
                                 QueueActions.Set,
-                                QueueActions.Compute
+                                QueueActions.Persist
                             }
                         },
-                        new QueueEntity(QueueEntities.Tickers)
+                        new QueueEntity(QueueEntities.Trades)
                         {
                             Actions = new[]
                             {
                                 QueueActions.Get,
                                 QueueActions.Set,
-                                QueueActions.Compute
+                                QueueActions.Persist
                             }
                         }
                     }

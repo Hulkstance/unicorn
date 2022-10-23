@@ -1,54 +1,9 @@
-﻿using System.Net.Security;
-using System.Security.Authentication;
+﻿using System.Security.Authentication;
 using RabbitMQ.Client;
+using Unicorn.Integration.RabbitMQ.Interfaces;
+using Unicorn.Integration.RabbitMQ.Models;
 
 namespace Unicorn.Integration.RabbitMQ;
-
-public sealed record RabbitSslOptions
-{
-    public bool Enabled { get; init; }
-    public SslProtocols Protocols { get; init; } = SslProtocols.Tls12;
-    public SslPolicyErrors AcceptablePolicyErrors { get; init; } = SslPolicyErrors.None;
-    public RemoteCertificateValidationCallback? CertificateValidationCallback { get; set; }
-}
-
-public abstract record RabbitBaseOptions
-{
-    public string Host { get; init; } = string.Empty;
-
-    public string VirtualHost { get; init; } = string.Empty;
-
-    public string User { get; init; } = string.Empty;
-
-    public string Password { get; init; } = string.Empty;
-
-    public int Port { get; init; } = AmqpTcpEndpoint.UseDefaultPort;
-    public TimeSpan RequestedHeartbeat { get; set; } = TimeSpan.FromSeconds(60);
-    public RabbitSslOptions Tls { get; init; } = new();
-}
-
-public interface IRabbitConnectionFactory : IDisposable
-{
-    /// <summary>
-    /// Username to use when authenticating to the server.
-    /// </summary>
-    string UserName { get; }
-
-    /// <summary>
-    /// Password to use when authenticating to the server.
-    /// </summary>
-    string Password { get; }
-
-    /// <summary>
-    /// Virtual host to access during this connection.
-    /// </summary>
-    string VirtualHost { get; }
-
-    IConnection CurrentConnection { get; }
-    IModel CurrentChannel { get; }
-    IConnection CreateConnection();
-    IModel CreateModel();
-}
 
 public sealed class RabbitConnectionFactory : IRabbitConnectionFactory
 {
@@ -67,7 +22,8 @@ public sealed class RabbitConnectionFactory : IRabbitConnectionFactory
             CurrentConnection.CreateModel(), LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    public static IRabbitConnectionFactory From<TOptions>(TOptions options) where TOptions : RabbitBaseOptions
+    public static IRabbitConnectionFactory From<TOptions>(TOptions options)
+        where TOptions : RabbitBaseOptions
     {
         ArgumentNullException.ThrowIfNull(options);
         return new RabbitConnectionFactory(FromConfig(options));

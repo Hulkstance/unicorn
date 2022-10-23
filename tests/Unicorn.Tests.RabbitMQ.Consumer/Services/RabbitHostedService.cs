@@ -3,17 +3,18 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Unicorn.Integration.RabbitMQ;
 using Unicorn.Integration.RabbitMQ.Enums;
+using Unicorn.Integration.RabbitMQ.Interfaces;
 
 namespace Unicorn.Tests.RabbitMQ.Consumer.Services;
 
-internal sealed class RabbitBackgroundService : BackgroundService
+internal sealed class RabbitHostedService : BackgroundService
 {
-    private readonly ILogger<RabbitBackgroundService> _logger;
+    private readonly ILogger<RabbitHostedService> _logger;
     private readonly RabbitAction _action;
     private readonly RabbitSubscriber _subscriber;
 
-    public RabbitBackgroundService(
-        ILogger<RabbitBackgroundService> logger,
+    public RabbitHostedService(
+        ILogger<RabbitHostedService> logger,
         IRabbitConnectionFactory connectionFactory,
         IServiceScopeFactory scopeFactory,
         RabbitAction action)

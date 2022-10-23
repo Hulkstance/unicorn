@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 using Unicorn.Integration.RabbitMQ;
+using Unicorn.Integration.RabbitMQ.Interfaces;
 using Unicorn.MarketData.Models;
 using Unicorn.MarketData.Services;
 

@@ -12,13 +12,13 @@ public enum QueueExchanges
 
 public enum QueueEntities
 {
-    Ticker,
-    Tickers
+    Trade,
+    Trades
 }
 
 public enum QueueActions
 {
     Get,
     Set,
-    Compute
+    Persist
 }

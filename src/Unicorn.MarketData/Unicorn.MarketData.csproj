@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Unicorn.Algo\Unicorn.Algo.csproj" />
     <ProjectReference Include="..\Unicorn.Contracts\Unicorn.Contracts.csproj" />
     <ProjectReference Include="..\Unicorn.Integration.RabbitMQ\Unicorn.Integration.RabbitMQ.csproj" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using Unicorn.Integration.RabbitMQ;
+using Unicorn.Integration.RabbitMQ.Interfaces;
 using Unicorn.Logging;
 using Unicorn.Tests.RabbitMQ.Consumer.Processors;
 using Unicorn.Tests.RabbitMQ.Consumer.Services;
@@ -15,10 +16,10 @@ var host = new HostBuilder()
         };
         services.AddSingleton<IRabbitConnectionFactory>(new RabbitConnectionFactory(factory));
 
-        services.AddTransient<TickerProcessor>();
+        services.AddTransient<TradeProcessor>();
 
         services.AddSingleton<RabbitAction>();
-        services.AddHostedService<RabbitBackgroundService>();
+        services.AddHostedService<RabbitHostedService>();
     })
     .ConfigureLogging()
     .UseConsoleLifetime()
