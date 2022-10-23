@@ -35,7 +35,7 @@ public static class MarketDataExtensions
         // RabbitMQ
         var factory = new ConnectionFactory
         {
-            HostName = "localhost"
+            HostName = configuration.GetValue<string>("RabbitMQOptions:Host")
         };
         services.AddSingleton<IRabbitConnectionFactory>(new RabbitConnectionFactory(factory));
 
