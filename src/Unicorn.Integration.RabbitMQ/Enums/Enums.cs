@@ -18,7 +18,6 @@ public enum QueueEntities
 
 public enum QueueActions
 {
-    Get,
-    Set,
+    Trigger,
     Persist
 }

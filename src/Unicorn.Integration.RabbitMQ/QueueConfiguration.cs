@@ -19,8 +19,7 @@ public static class QueueConfiguration
                         {
                             Actions = new[]
                             {
-                                QueueActions.Get,
-                                QueueActions.Set,
+                                QueueActions.Trigger,
                                 QueueActions.Persist
                             }
                         },
@@ -28,8 +27,7 @@ public static class QueueConfiguration
                         {
                             Actions = new[]
                             {
-                                QueueActions.Get,
-                                QueueActions.Set,
+                                QueueActions.Trigger,
                                 QueueActions.Persist
                             }
                         }

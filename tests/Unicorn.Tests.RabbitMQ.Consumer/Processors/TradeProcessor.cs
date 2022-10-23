@@ -32,8 +32,7 @@ public sealed class TradeProcessor : IRabbitProcess
         {
             Trade trade => action switch
             {
-                QueueActions.Get => GetAssets("Get", trade),
-                QueueActions.Set => GetAssets("Set", trade),
+                QueueActions.Trigger => GetAssets("Trigger", trade),
                 QueueActions.Persist => GetAssets("Persist", trade),
                 _ => Task.CompletedTask
             },
@@ -47,8 +46,7 @@ public sealed class TradeProcessor : IRabbitProcess
         {
             IEnumerable<Trade> trades => action switch
             {
-                QueueActions.Get => GetAssetsRange("Get", trades),
-                QueueActions.Set => GetAssetsRange("Set", trades),
+                QueueActions.Trigger => GetAssetsRange("Trigger", trades),
                 QueueActions.Persist => GetAssetsRange("Persist", trades),
                 _ => Task.CompletedTask
             },

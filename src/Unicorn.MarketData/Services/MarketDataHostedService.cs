@@ -42,32 +42,32 @@ internal sealed class MarketDataHostedService : BackgroundService
 
         var subResult = await _socketClient.SpotStreams.SubscribeToTradeUpdatesAsync(symbols, data =>
         {
-            var symbol = data.Data.Symbol;
-
             _logger.LogInformation("{Timestamp:HH:mm:ss.fff}, {Symbol}, {Price}, {Volume}",
                 data.Timestamp, data.Data.Symbol, data.Data.Price, data.Data.Quantity);
 
-            var trade = new Trade(
-                data.Timestamp,
-                data.Data.Symbol,
-                data.Data.Price,
-                data.Data.Quantity);
+            var symbol = data.Data.Symbol;
 
             if (_symbols.TryGetValue(symbol, out var volumeSpike))
             {
-                var signal = volumeSpike.ComputeNextValue(trade.Volume);
+                var trade = new Trade(
+                    data.Timestamp,
+                    data.Data.Symbol,
+                    data.Data.Price,
+                    data.Data.Quantity);
 
-                if (signal.HasValue)
+                var isVolumeSpikeTriggered = volumeSpike.ComputeNextValue(trade.Quantity);
+
+                if (isVolumeSpikeTriggered.HasValue && isVolumeSpikeTriggered.Value)
                 {
-                    Console.WriteLine($"{symbol} | Volume Spike = {signal}");
+                    Console.WriteLine($"{symbol} | Volume Spike triggered");
+
+                    _publisher.Publish(
+                        QueueNames.Signals,
+                        QueueEntities.Trade,
+                        QueueActions.Persist,
+                        trade with { IsVolumeSpikeTriggered = isVolumeSpikeTriggered });
                 }
             }
-
-            _publisher.Publish(
-                QueueNames.Signals,
-                QueueEntities.Trade,
-                QueueActions.Persist,
-                trade);
         }, stoppingToken);
 
         if (!subResult)
