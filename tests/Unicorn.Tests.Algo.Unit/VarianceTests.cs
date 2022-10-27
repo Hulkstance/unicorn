@@ -14,11 +14,11 @@ public class VarianceTests
         var prices = new decimal[] { 10, 12, 9, 10, 15, 13, 18, 18, 20, 24 };
         var expected = new[] { 0, 0, 0, 1.1875m, 5.25m, 5.6875m, 8.5m, 4.5m, 6.6875m, 6 };
 
-        var variance = new Variance(period);
+        var sut = new Variance(period);
 
         // Act
         var actual = prices
-            .Select(x => variance.ComputeNextValue(x))
+            .Select(x => sut.ComputeNextValue(x))
             .ToList();
 
         // Assert
@@ -33,14 +33,14 @@ public class VarianceTests
         var prices = new decimal[] { 10, 12, 9, 10, 15, 13, 18, 18, 20, 24 };
         var expected = new[] { false, false, false, true, true, true, true, true, true, true };
 
-        var variance = new Variance(period);
+        var sut = new Variance(period);
 
         // Act
         var actual = new List<bool>();
         foreach (var price in prices)
         {
-            variance.ComputeNextValue(price);
-            actual.Add(variance.IsReady);
+            sut.ComputeNextValue(price);
+            actual.Add(sut.IsReady);
         }
 
         // Assert
@@ -55,7 +55,7 @@ public class VarianceTests
         var prices = new decimal[] { 10, 12, 9, 10, 15, 13, 18, 18, 20, 24 };
         var expected = new[] { 0, 0, 0, 0, 0, 0, 8.5m, 4.5m, 6.6875m, 6 };
 
-        var variance = new Variance(period);
+        var sut = new Variance(period);
 
         // Act
         var actual = new List<decimal>();
@@ -63,10 +63,10 @@ public class VarianceTests
         {
             if (i == 3)
             {
-                variance.Reset();
+                sut.Reset();
             }
 
-            actual.Add(variance.ComputeNextValue(prices[i]));
+            actual.Add(sut.ComputeNextValue(prices[i]));
         }
 
         // Assert

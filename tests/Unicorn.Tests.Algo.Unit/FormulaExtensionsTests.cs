@@ -51,6 +51,8 @@ public class FormulaExtensionsTests
         double expectedPopulationVariance)
     {
         // Arrange
+        const double precision = 0.01;
+
         var source = input.ToList();
 
         // Act
@@ -58,19 +60,21 @@ public class FormulaExtensionsTests
         var populationVariance = source.PopulationVariance(mean);
 
         // Assert
-        variance.Should().Be(expectedVariance);
-        populationVariance.Should().Be(expectedPopulationVariance);
+        variance.Should().BeApproximately(expectedVariance, precision);
+        populationVariance.Should().BeApproximately(expectedPopulationVariance, precision);
     }
 
     [Theory]
-    [InlineData(new double[] { 40, 30, 20 }, 10, 8.16496580927726)]
-    [InlineData(new double[] { 40, 30, 20, 50, 100, 150, 200, 250, 10, 25 }, 84.69717298181274, 80.35079339994098)]
+    [InlineData(new double[] { 40, 30, 20 }, 10, 8.16)]
+    [InlineData(new double[] { 40, 30, 20, 50, 100, 150, 200, 250, 10, 25 }, 84.69, 80.35)]
     public void StandardDeviation_ShouldBeCorrect_WhenGivenListOfValues(
         double[] input,
         double expectedStdDev,
         double expectedPopulationStdDev)
     {
         // Arrange
+        const double precision = 0.01;
+
         var source = input.ToList();
 
         // Act
@@ -78,7 +82,7 @@ public class FormulaExtensionsTests
         var populationStdDev = source.PopulationStandardDeviation();
 
         // Assert
-        stdDev.Should().Be(expectedStdDev);
-        populationStdDev.Should().Be(expectedPopulationStdDev);
+        stdDev.Should().BeApproximately(expectedStdDev, precision);
+        populationStdDev.Should().BeApproximately(expectedPopulationStdDev, precision);
     }
 }

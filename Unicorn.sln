@@ -4,7 +4,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1BFEE68D-44D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AE66ECF-89EB-41E0-B8DB-A46F44045EE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unicorn", "src\Unicorn\Unicorn.csproj", "{1DEA2E8B-846C-4B0C-8F6F-F6F005AE68CC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unicorn.Host", "src\Unicorn.Host\Unicorn.Host.csproj", "{1DEA2E8B-846C-4B0C-8F6F-F6F005AE68CC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unicorn.MarketData", "src\Unicorn.MarketData\Unicorn.MarketData.csproj", "{F52A7653-32DA-476F-B7E9-C198E27BF978}"
 EndProject

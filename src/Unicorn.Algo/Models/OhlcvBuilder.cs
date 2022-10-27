@@ -24,7 +24,7 @@ public sealed class OhlcvBuilder
     {
         if (open < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(open), "The open cannot be null.");
+            throw new ArgumentOutOfRangeException(nameof(open), "Open cannot be negative");
         }
 
         _open = open;
@@ -35,7 +35,7 @@ public sealed class OhlcvBuilder
     {
         if (high < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(high), "The high cannot be null.");
+            throw new ArgumentOutOfRangeException(nameof(high), "High cannot be negative");
         }
 
         _high = high;
@@ -46,7 +46,7 @@ public sealed class OhlcvBuilder
     {
         if (low < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(low), "The low cannot be null.");
+            throw new ArgumentOutOfRangeException(nameof(low), "Low cannot be negative");
         }
 
         _low = low;
@@ -57,7 +57,7 @@ public sealed class OhlcvBuilder
     {
         if (close < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(close), "The close cannot be null.");
+            throw new ArgumentOutOfRangeException(nameof(close), "Close cannot be negative");
         }
 
         _close = close;
@@ -68,7 +68,7 @@ public sealed class OhlcvBuilder
     {
         if (volume < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(volume), "The volume cannot be null.");
+            throw new ArgumentOutOfRangeException(nameof(volume), "Volume cannot be negative");
         }
 
         _volume = volume;

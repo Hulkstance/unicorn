@@ -18,11 +18,11 @@ public class StandardDeviationTests
             2.91547594742265, 2.12132034355964, 2.58602010819715, 2.44948974278318
         };
 
-        var stdDev = new StandardDeviation(period);
+        var sut = new StandardDeviation(period);
 
         // Act
         var actual = prices
-            .Select(x => stdDev.ComputeNextValue(x))
+            .Select(x => sut.ComputeNextValue(x))
             .ToList();
 
         // Assert
@@ -37,14 +37,14 @@ public class StandardDeviationTests
         var prices = new decimal[] { 10, 12, 9, 10, 15, 13, 18, 18, 20, 24 };
         var expected = new[] { false, false, false, true, true, true, true, true, true, true };
 
-        var stdDev = new StandardDeviation(period);
+        var sut = new StandardDeviation(period);
 
         // Act
         var actual = new List<bool>();
         foreach (var price in prices)
         {
-            stdDev.ComputeNextValue(price);
-            actual.Add(stdDev.IsReady);
+            sut.ComputeNextValue(price);
+            actual.Add(sut.IsReady);
         }
 
         // Assert
@@ -62,7 +62,7 @@ public class StandardDeviationTests
             0, 0, 0, 0, 0, 0, 2.91547594742265, 2.12132034355964, 2.58602010819715, 2.44948974278318
         };
 
-        var stdDev = new StandardDeviation(period);
+        var sut = new StandardDeviation(period);
 
         // Act
         var actual = new List<decimal>();
@@ -70,10 +70,10 @@ public class StandardDeviationTests
         {
             if (i == 3)
             {
-                stdDev.Reset();
+                sut.Reset();
             }
 
-            actual.Add(stdDev.ComputeNextValue(prices[i]));
+            actual.Add(sut.ComputeNextValue(prices[i]));
         }
 
         // Assert

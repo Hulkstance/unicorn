@@ -26,11 +26,11 @@ public class VolumeSpikeTests
             false, false, false
         };
 
-        var volumeSpike = new VolumeSpike(period, 2);
+        var sut = new VolumeSpike(period, 2);
 
         // Act
         var actual = volumes
-            .Select(x => volumeSpike.ComputeNextValue(x))
+            .Select(x => sut.ComputeNextValue(x))
             .ToList();
 
         // Assert

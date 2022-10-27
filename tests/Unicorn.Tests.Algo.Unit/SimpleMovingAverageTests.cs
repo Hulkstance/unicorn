@@ -14,11 +14,11 @@ public class SimpleMovingAverageTests
         var prices = new decimal[] { 10, 12, 9, 10, 15, 13, 18, 18, 20, 24 };
         var expected = new[] { 0, 0, 0, 10.25m, 11.5m, 11.75m, 14, 16, 17.25m, 20 };
 
-        var sma = new SimpleMovingAverage(period);
+        var sut = new SimpleMovingAverage(period);
 
         // Act
         var actual = prices
-            .Select(x => sma.ComputeNextValue(x))
+            .Select(x => sut.ComputeNextValue(x))
             .ToList();
 
         // Assert
@@ -33,14 +33,14 @@ public class SimpleMovingAverageTests
         var prices = new decimal[] { 10, 12, 9, 10, 15, 13, 18, 18, 20, 24 };
         var expected = new[] { false, false, false, true, true, true, true, true, true, true };
 
-        var sma = new SimpleMovingAverage(period);
+        var sut = new SimpleMovingAverage(period);
 
         // Act
         var actual = new List<bool>();
         foreach (var price in prices)
         {
-            sma.ComputeNextValue(price);
-            actual.Add(sma.IsReady);
+            sut.ComputeNextValue(price);
+            actual.Add(sut.IsReady);
         }
 
         // Assert
@@ -55,7 +55,7 @@ public class SimpleMovingAverageTests
         var prices = new decimal[] { 10, 12, 9, 10, 15, 13, 18, 18, 20, 24 };
         var expected = new[] { 0, 0, 0, 0, 0, 0, 14, 16, 17.25m, 20 };
 
-        var sma = new SimpleMovingAverage(period);
+        var sut = new SimpleMovingAverage(period);
 
         // Act
         var actual = new List<decimal>();
@@ -63,10 +63,10 @@ public class SimpleMovingAverageTests
         {
             if (i == 3)
             {
-                sma.Reset();
+                sut.Reset();
             }
 
-            actual.Add(sma.ComputeNextValue(prices[i]));
+            actual.Add(sut.ComputeNextValue(prices[i]));
         }
 
         // Assert

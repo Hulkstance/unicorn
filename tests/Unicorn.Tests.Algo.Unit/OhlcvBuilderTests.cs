@@ -6,26 +6,14 @@ namespace Unicorn.Tests.Algo.Unit;
 
 public class OhlcvBuilderTests
 {
-    [Fact]
-    public void Build_ShouldNotThrow_WhenGivenNoAdditionalSetupInformation()
-    {
-        // Arrange
-        var ohlcvBuilder = new OhlcvBuilder();
-
-        // Act
-        var action = new Action(() => ohlcvBuilder.Build());
-
-        // Assert
-        action.Should().NotThrow();
-    }
-
     [Theory]
     [InlineData(0, 0, 0, 0, 0)]
     [InlineData(15000, 16400, 13500, 16000, 76000)]
-    public void Build_ShouldBeConstructed_WhenGivenSetupInformation(decimal open, decimal high, decimal low, decimal close, decimal volume)
+    public void Build_ShouldBeAsExpected_WhenParametersArePassed(
+        decimal open, decimal high, decimal low, decimal close, decimal volume)
     {
         // Arrange
-        var ohlcvBuilder = new OhlcvBuilder();
+        var sut = new OhlcvBuilder();
         var expectedOhlcv = new
         {
             Open = open,
@@ -36,7 +24,7 @@ public class OhlcvBuilderTests
         };
 
         // Act
-        var ohlcv = ohlcvBuilder
+        var ohlcv = sut
             .WithDate(new DateTimeOffset(2022, 5, 1, 8, 6, 32, 545,
                 new TimeSpan(1, 0, 0)))
             .WithOpen(open)
@@ -51,77 +39,90 @@ public class OhlcvBuilderTests
     }
 
     [Fact]
-    public void Build_ShouldThrow_WhenGivenNegativeOpen()
+    public void Build_ShouldNotThrow_WhenNoParametersArePassed()
+    {
+        // Arrange
+        var sut = new OhlcvBuilder();
+
+        // Act
+        var action = new Action(() => sut.Build());
+
+        // Assert
+        action.Should().NotThrow();
+    }
+
+    [Fact]
+    public void WithOpen_ShouldThrow_WhenOpenIsNegative()
     {
         // Arrange
         const decimal open = -1;
-        var ohlcvBuilder = new OhlcvBuilder();
+        var sut = new OhlcvBuilder();
 
         // Act
-        var action = new Action(() => ohlcvBuilder.WithOpen(open));
+        var action = new Action(() => sut.WithOpen(open));
 
         // Assert
         action.Should().Throw<ArgumentOutOfRangeException>()
-            .WithMessage("The * cannot be null. (Parameter '*')");
+            .WithMessage("Open cannot be negative *");
     }
 
     [Fact]
-    public void Build_ShouldThrow_WhenGivenNegativeHigh()
+    public void WithHigh_ShouldThrow_WhenHighIsNegative()
     {
         // Arrange
         const decimal high = -1;
-        var ohlcvBuilder = new OhlcvBuilder();
+        var sut = new OhlcvBuilder();
 
         // Act
-        var action = new Action(() => ohlcvBuilder.WithHigh(high));
+        var action = new Action(() => sut.WithHigh(high));
 
         // Assert
         action.Should().Throw<ArgumentOutOfRangeException>()
-            .WithMessage("The * cannot be null. (Parameter '*')");
+            .WithMessage("High cannot be negative *");
     }
 
     [Fact]
-    public void Build_ShouldThrow_WhenGivenNegativeLow()
+    public void WithLow_ShouldThrow_WhenLowIsNegative()
     {
         // Arrange
         const decimal low = -1;
-        var ohlcvBuilder = new OhlcvBuilder();
+        var sut = new OhlcvBuilder();
 
         // Act
-        var action = new Action(() => ohlcvBuilder.WithLow(low));
+        var action = new Action(() => sut.WithLow(low));
 
         // Assert
         action.Should().Throw<ArgumentOutOfRangeException>()
-            .WithMessage("The * cannot be null. (Parameter '*')");
+            .WithMessage("Low cannot be negative *");
     }
 
     [Fact]
-    public void Build_ShouldThrow_WhenGivenNegativeClose()
+    public void WithClose_ShouldThrow_WhenCloseIsNegative()
     {
         // Arrange
         const decimal close = -1;
-        var ohlcvBuilder = new OhlcvBuilder();
+        var sut = new OhlcvBuilder();
 
         // Act
-        var action = new Action(() => ohlcvBuilder.WithClose(close));
+        var action = new Action(() => sut.WithClose(close));
 
         // Assert
         action.Should().Throw<ArgumentOutOfRangeException>()
-            .WithMessage("The * cannot be null. (Parameter '*')");
+            .WithMessage("Close cannot be negative *");
     }
 
     [Fact]
-    public void Build_ShouldThrow_WhenGivenNegativeVolume()
+    public void WithVolume_ShouldThrow_WhenVolumeIsNegative()
     {
         // Arrange
         const decimal volume = -1;
-        var ohlcvBuilder = new OhlcvBuilder();
+        var sut = new OhlcvBuilder();
 
         // Act
-        var action = new Action(() => ohlcvBuilder.WithVolume(volume));
+        var action = new Action(() => sut.WithVolume(volume));
 
         // Assert
         action.Should().Throw<ArgumentOutOfRangeException>()
-            .WithMessage("The * cannot be null. (Parameter '*')");
+            .WithMessage("Volume cannot be negative *");
     }
 }
